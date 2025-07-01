@@ -76,12 +76,10 @@ RUN apt-get update \
     && useradd user -u 1000 -g 0 --no-create-home --home-dir /app/data
 
 COPY --from=builder --chown=1000 /app/.venv /app/.venv
-COPY docker/mem0ai-0.1.111-py3-none-any.whl /app/
-
-RUN pip install /app/mem0ai-0.1.111-py3-none-any.whl
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
+
 
 LABEL org.opencontainers.image.title=langflow
 LABEL org.opencontainers.image.authors=['Langflow']
