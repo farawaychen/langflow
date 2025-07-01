@@ -84,29 +84,27 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
         ),
     ]
 
-    def build_mem0(self) -> Memory:
+    def build_mem0(self) -> MemoryClient:
         """Initializes a Mem0 memory instance based on provided configuration and API keys."""
         if self.openai_api_key:
             os.environ["OPENAI_API_KEY"] = self.openai_api_key
 
         try:
-            if not self.mem0_api_key:
-                return Memory.from_config(config_dict=dict(self.mem0_config)) if self.mem0_config else Memory()
+#            if not self.mem0_api_key:
+#                return Memory.from_config(config_dict=dict(self.mem0_config)) if self.mem0_config else Memory()
             if self.mem0_config:
-                return MemoryClient.from_config(api_key=self.mem0_api_key, config_dict=dict(self.mem0_config))
-            return MemoryClient(api_key=self.mem0_api_key)
+                return MemoryClient(api_key=self.mem0_api_key, user_id=self.user_id, **dict(self.mem0_config))
+            return MemoryClient(api_key=self.mem0_api_key, user_id=self.user_id)
         except ImportError as e:
             msg = "Mem0 is not properly installed. Please install it with 'pip install -U mem0ai'."
             raise ImportError(msg) from e
 
-    def ingest_data(self) -> Memory:
+    def ingest_data(self, mem0_memory:MemoryClient):
         """Ingests a new message into Mem0 memory and returns the updated memory instance."""
-        mem0_memory = self.existing_memory or self.build_mem0()
-
         if not self.ingest_message or not self.user_id:
             logger.warning("Missing 'ingest_message' or 'user_id'; cannot ingest data.")
-            return mem0_memory
-
+            return
+        
         metadata = self.metadata or {}
 
         logger.info("Ingesting message for user_id: %s", self.user_id)
@@ -117,11 +115,10 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
             logger.exception("Failed to add message to Mem0 memory.")
             raise
 
-        return mem0_memory
-
     def build_search_results(self) -> Data:
         """Searches the Mem0 memory for related messages based on the search query and returns the results."""
-        mem0_memory = self.ingest_data()
+        mem0_memory = self.build_mem0()
+        self.ingest_data(mem0_memory)
         search_query = self.search_query
         user_id = self.user_id
 

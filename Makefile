@@ -329,9 +329,9 @@ docker_build_frontend: dockerfile_build_fe clear_dockerimage ## build Frontend D
 
 dockerfile_build:
 	@echo 'BUILDING DOCKER IMAGE: ${DOCKERFILE}'
-	@docker build --rm \
+	@DOCKER_BUILDKIT=1 docker build --rm \
 		-f ${DOCKERFILE} \
-		-t langflow:${VERSION} .
+		-t welo/welolangflow:${VERSION} .
 
 dockerfile_build_be: dockerfile_build
 	@echo 'BUILDING DOCKER IMAGE BACKEND: ${DOCKERFILE_BACKEND}'
