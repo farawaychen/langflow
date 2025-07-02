@@ -1,6 +1,7 @@
 import os
 
 from loguru import logger
+from mem0 import Memory, MemoryClient
 
 from langflow.base.memory.model import LCChatMemoryComponent
 from langflow.inputs.inputs import (
@@ -12,7 +13,6 @@ from langflow.inputs.inputs import (
 )
 from langflow.io import Output
 from langflow.schema.data import Data
-from .mem0_client import MemoryClient
 
 class Mem0MemoryComponent(LCChatMemoryComponent):
     display_name = "Mem0 Chat Memory"
