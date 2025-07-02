@@ -450,6 +450,21 @@ def setup_app(static_files_dir: Path | None = None, *, backend_only: bool = Fals
         setup_static_files(app, static_files_dir)
     return app
 
+def create_debug_app() -> FastAPI:
+    """Setup the FastAPI app."""
+    # get the directory of the current file
+    # if not static_files_dir:
+    static_files_dir = get_static_files_dir()
+
+    if not static_files_dir or not static_files_dir.exists():
+        msg = f"Static files directory {static_files_dir} does not exist."
+        raise RuntimeError(msg)
+    app = create_app()
+
+    if static_files_dir is not None:
+        setup_static_files(app, static_files_dir)
+    return app
+
 
 if __name__ == "__main__":
     import uvicorn

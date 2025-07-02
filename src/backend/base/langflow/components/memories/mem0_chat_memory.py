@@ -75,7 +75,7 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
     ]
 
     outputs = [
-        Output(name="memory", display_name="Mem0 Memory", method="ingest_data"),
+        # Output(name="memory", display_name="Mem0 Memory", method="ingest_data"),
         Output(
             name="search_results",
             display_name="Search Results",

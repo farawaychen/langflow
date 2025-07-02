@@ -2,6 +2,36 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug All",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "preLaunchTask": "Install Backend",
+
+      "args": [
+        "--factory",
+        "langflow.main:create_debug_app",
+        "--port",
+        "7866",
+        "--host",
+        "0.0.0.0",
+        "--reload",
+        "--log-level",
+        "debug",
+        "--loop",
+        "asyncio",
+        "--reload-include",
+        "./src/backend/*"
+      ],
+      "jinja": true,
+      "justMyCode": false,
+      "env": {
+        "LANGFLOW_LOG_LEVEL": "debug",
+        "LANGFLOW_PROMETHEUS_PORT": "9090"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
       "name": "Debug Backend",
       "type": "debugpy",
       "request": "launch",
@@ -12,7 +42,7 @@
         "--factory",
         "langflow.main:create_app",
         "--port",
-        "7860",
+        "7866",
         "--reload",
         "--log-level",
         "debug",

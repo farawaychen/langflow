@@ -5,6 +5,7 @@ import importlib
 import json
 import pkgutil
 from pathlib import Path
+import traceback
 from typing import TYPE_CHECKING, Any
 
 from loguru import logger
@@ -138,6 +139,9 @@ def _process_single_module(modname: str) -> tuple[str, dict] | None:
             module_components[component_name] = comp_template
         except Exception as e:  # noqa: BLE001
             failed_count.append(f"{name}: {e}")
+            print(f"Exception type: {type(e).__name__}")
+            print(f"Exception message: {e}")
+            traceback.print_exc()
             continue
 
     if failed_count:
