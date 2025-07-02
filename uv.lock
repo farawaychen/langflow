@@ -4889,7 +4889,6 @@ dependencies = [
     { name = "markdown" },
     { name = "markupsafe" },
     { name = "mcp" },
-    { name = "mem0ai" },
     { name = "metal-sdk" },
     { name = "metaphor-python" },
     { name = "needle-python" },
@@ -4974,6 +4973,7 @@ dev = [
     { name = "hypothesis" },
     { name = "ipykernel" },
     { name = "locust" },
+    { name = "mem0ai" },
     { name = "mypy" },
     { name = "packaging" },
     { name = "pandas-stubs" },
@@ -5087,7 +5087,6 @@ requires-dist = [
     { name = "markdown", specifier = "==3.7" },
     { name = "markupsafe", specifier = "==3.0.2" },
     { name = "mcp", specifier = ">=0.9.1" },
-    { name = "mem0ai", specifier = "==0.1.34" },
     { name = "metal-sdk", specifier = "==2.5.1" },
     { name = "metaphor-python", specifier = "==0.1.23" },
     { name = "needle-python", specifier = ">=0.4.0" },
@@ -5149,6 +5148,7 @@ dev = [
     { name = "hypothesis", specifier = ">=6.123.17" },
     { name = "ipykernel", specifier = ">=6.29.0" },
     { name = "locust", specifier = ">=2.32.9" },
+    { name = "mem0ai", specifier = "==0.1.111" },
     { name = "mypy", specifier = ">=1.11.0" },
     { name = "packaging", specifier = ">=24.1,<25.0" },
     { name = "pandas-stubs", specifier = ">=2.1.4.231227" },
@@ -6150,7 +6150,7 @@ wheels = [
 
 [[package]]
 name = "mem0ai"
-version = "0.1.34"
+version = "0.1.111"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openai" },
@@ -6160,9 +6160,9 @@ dependencies = [
     { name = "qdrant-client" },
     { name = "sqlalchemy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/db/6d/e84e807a89abe3b0acfb02500488e5ca2742397f9b9ab61d2b54007fe384/mem0ai-0.1.34.tar.gz", hash = "sha256:1d99afe3509f659c025c220c533cb033f93c98ae9ae8c11eb057ee07a73c8d9d", size = 57737, upload-time = "2024-11-28T10:13:01.716Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2d/93/ff302f96e02b5ac80a1ad18b94617985296f78aee212f86d83cba1c2a1a5/mem0ai-0.1.111.tar.gz", hash = "sha256:cc4b1a20cd4fd3b980cca4fd9f77ee4c9cff81b92e6f4d30014fd900dce59bba", size = 108299, upload-time = "2025-06-23T16:23:19.642Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/d5/c864ff1a2f015f084053de4c8595e7938dadde17f4c139ee0aee81cff4dc/mem0ai-0.1.34-py3-none-any.whl", hash = "sha256:10ad47e4773e05c3ed51004edf8a6797e72cbbf97658f368be141432c548287c", size = 83191, upload-time = "2024-11-28T10:12:59.753Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/f5/185c88df177d0d9ae1226cc1ae75a2b2480280521a5c7690f1ca6a54b6af/mem0ai-0.1.111-py3-none-any.whl", hash = "sha256:53e8ce3551ffe1454b6e28ba90a8a88907280a9052edfeb872241662a4707f14", size = 168161, upload-time = "2025-06-23T16:23:18.146Z" },
 ]
 
 [[package]]
