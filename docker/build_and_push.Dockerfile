@@ -42,6 +42,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=src/backend/base/pyproject.toml,target=src/backend/base/pyproject.toml \
     uv sync --frozen --no-install-project --no-editable --extra postgresql
 
+COPY ./docker/mem0ai-0.1.111-py3-none-any.whl /app/mem0ai-0.1.111-py3-none-any.whl	
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install mem0ai==0.1.111 /app/mem0ai-0.1.111-py3-none-any.whl
+
 COPY ./src /app/src
 
 COPY src/frontend /tmp/src/frontend
