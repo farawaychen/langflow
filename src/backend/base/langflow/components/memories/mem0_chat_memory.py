@@ -100,7 +100,7 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
 
     def ingest_data(self, mem0_memory:MemoryClient):
         """Ingests a new message into Mem0 memory and returns the updated memory instance."""
-        if not self.ingest_message or not self.user_id:
+        if not self.user_id:
             logger.warning("Missing 'ingest_message' or 'user_id'; cannot ingest data.")
             return
         
@@ -116,7 +116,6 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
             logger.info(f"add memory success. memory {self.search_query}")
         except Exception:
             logger.exception("Failed to add message to Mem0 memory.")
-            raise
 
     def build_search_results(self) -> Data:
         """Searches the Mem0 memory for related messages based on the search query and returns the results."""
@@ -136,7 +135,7 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
                 related_memories = mem0_memory.get_all(user_id=user_id)
         except Exception:
             logger.exception("Failed to retrieve related memories from Mem0.")
-            raise
+            related_memories = []
 
         logger.info(f"Ori Related memories retrieved: {related_memories}")
         vec_mem = "我" + ",".join(item["memory"] for item in related_memories["results"])
