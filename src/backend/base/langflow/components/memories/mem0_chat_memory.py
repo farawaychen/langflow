@@ -106,10 +106,14 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
         
         metadata = self.metadata or {}
 
-        logger.info("Ingesting message for user_id: %s", self.user_id)
+        logger.info(f"Ingesting message for user_id: {self.user_id}")
 
+        messages = [
+            {"role": "user", "content": f"{self.search_query}"},
+        ]   
         try:
-            mem0_memory.add(self.ingest_message, user_id=self.user_id, metadata=metadata)
+            mem0_memory.add(messages, user_id=self.user_id, metadata=metadata)
+            logger.info(f"add memory success. memory {self.search_query}")
         except Exception:
             logger.exception("Failed to add message to Mem0 memory.")
             raise
@@ -121,20 +125,25 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
         search_query = self.search_query
         user_id = self.user_id
 
-        logger.info("Search query: %s", search_query)
+        logger.info(f"Search query: {search_query}")
 
         try:
             if search_query:
-                logger.info("Performing search with query.")
+                logger.info(f"Performing search with query. user_id:{user_id}")
                 related_memories = mem0_memory.search(query=search_query, user_id=user_id)
             else:
-                logger.info("Retrieving all memories for user_id: %s", user_id)
+                logger.info(f"Retrieving all memories for user_id: {user_id}")
                 related_memories = mem0_memory.get_all(user_id=user_id)
         except Exception:
             logger.exception("Failed to retrieve related memories from Mem0.")
             raise
 
-        logger.info("Related memories retrieved: %s", related_memories)
-        return related_memories
+        logger.info(f"Ori Related memories retrieved: {related_memories}")
+        vec_mem = "我" + ",".join(item["memory"] for item in related_memories["results"])
+        # vec_mem = ",".join(item["memory"] for item in related_memories["results"])
+        mem= {
+            "vec_mem":vec_mem
+        }
+        return Data(data=mem, text_key="long_memory")
 
 
