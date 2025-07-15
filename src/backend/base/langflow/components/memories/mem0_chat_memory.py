@@ -1,5 +1,6 @@
 import os
 
+from langflow.schema.message import Message
 from loguru import logger
 from mem0 import Memory, MemoryClient
 
@@ -16,7 +17,7 @@ from langflow.schema.data import Data
 
 class Mem0MemoryComponent(LCChatMemoryComponent):
     display_name = "Mem0 Chat Memory"
-    description = "Retrieves and stores chat messages using Mem0 memory storage."
+    description = "Retrieves and stores user memory."
     name = "mem0_chat_memory"
     icon: str = "Mem0"
     inputs = [
@@ -53,7 +54,11 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
             name="user_id", display_name="User ID", info="Identifier for the user associated with the messages."
         ),
         MessageTextInput(
-            name="search_query", display_name="Search Query", info="Input text for searching related memories in Mem0."
+            name="search_query", 
+            display_name="Search Query", 
+            info="Input text for searching related memories.",
+            tool_mode=True,
+            required=True,
         ),
         SecretStrInput(
             name="mem0_api_key",
@@ -117,7 +122,7 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
         except Exception:
             logger.exception("Failed to add message to Mem0 memory.")
 
-    def build_search_results(self) -> Data:
+    def build_search_results(self) -> Message:
         """Searches the Mem0 memory for related messages based on the search query and returns the results."""
         mem0_memory = self.build_mem0()
         self.ingest_data(mem0_memory)
@@ -139,10 +144,6 @@ class Mem0MemoryComponent(LCChatMemoryComponent):
 
         logger.info(f"Ori Related memories retrieved: {related_memories}")
         vec_mem = "我" + ",".join(item["memory"] for item in related_memories["results"])
-        # vec_mem = ",".join(item["memory"] for item in related_memories["results"])
-        mem= {
-            "vec_mem":vec_mem
-        }
-        return Data(data=mem, text_key="long_memory")
+        return Message(text=vec_mem)
 
 
