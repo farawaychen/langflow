@@ -169,6 +169,8 @@ class Data(BaseModel):
         files = self.data.get("files", [])
         if sender == MESSAGE_SENDER_USER:
             if files:
+                from langflow.schema.image import get_file_paths
+                files = get_file_paths(files)
                 contents = [{"type": "text", "text": text}]
                 for file_path in files:
                     image_url = create_data_url(file_path)
