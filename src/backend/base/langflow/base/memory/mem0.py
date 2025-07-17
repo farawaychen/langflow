@@ -62,10 +62,14 @@ class Mem0LCMemory(BaseChatMessageHistory):
 
             if isinstance(memories, dict) and "results" in memories:
                 # Handle cloud API response format
-                memories = memories["results"]
+                rag_memories = memories["results"]
+            if isinstance(memories, dict) and "relations" in memories:
+                # Handle cloud API response format
+                relation_memories = memories["relations"]
             # Convert memories to markdown bullet points using list comprehension
-            bullet_points = [f"- {mem['memory']}" for mem in memories if isinstance(mem, dict) and "memory" in mem]
-
+            bullet_points = [f"- {mem['memory']}" for mem in rag_memories if isinstance(mem, dict) and "memory" in mem]
+            relation_bullet_points = [f"- {mem['source']} -> {mem['relationship']} -> {mem['destination']}" for mem in relation_memories if isinstance(mem, dict)]
+            bullet_points.extend(relation_bullet_points)
             if not bullet_points:
                 return []
 
