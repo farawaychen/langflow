@@ -379,3 +379,10 @@ async def verify_public_flow_and_get_user(flow_id: uuid.UUID, client_id: str | N
         raise HTTPException(status_code=403, detail=msg)
 
     return user, new_flow_id
+
+def is_valid_uuid(val):
+    try:
+        uuid_obj = uuid.UUID(val)
+    except ValueError:
+        return False
+    return str(uuid_obj) == val

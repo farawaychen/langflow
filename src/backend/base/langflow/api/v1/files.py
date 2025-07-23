@@ -32,8 +32,8 @@ async def get_flow(
     flow = await session.get(Flow, flow_id)
     if not flow:
         raise HTTPException(status_code=404, detail="Flow not found")
-    if flow.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="You don't have access to this flow")
+    # if flow.user_id != current_user.id:
+    #     raise HTTPException(status_code=403, detail="You don't have access to this flow")
     return flow
 
 
@@ -56,8 +56,8 @@ async def upload_file(
             status_code=413, detail=f"File size is larger than the maximum file size {max_file_size_upload}MB."
         )
 
-    if flow.user_id != current_user.id:
-        raise HTTPException(status_code=403, detail="You don't have access to this flow")
+    # if flow.user_id != current_user.id:
+    #     raise HTTPException(status_code=403, detail="You don't have access to this flow")
 
     try:
         file_content = await file.read()

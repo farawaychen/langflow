@@ -16,7 +16,7 @@ from sqlalchemy import or_, update
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
 
-from langflow.api.utils import CurrentActiveUser, DbSession, cascade_delete_flow, custom_params, remove_api_keys
+from langflow.api.utils import CurrentActiveUser, DbSession, cascade_delete_flow, custom_params, remove_api_keys,is_valid_uuid
 from langflow.api.v1.flows import create_flows
 from langflow.api.v1.schemas import FlowListCreate
 from langflow.helpers.flow import generate_unique_flow_name
@@ -101,13 +101,22 @@ async def read_projects(
     current_user: CurrentActiveUser,
 ):
     try:
-        projects = (
-            await session.exec(
-                select(Folder).where(
-                    or_(Folder.user_id == current_user.id, Folder.user_id == None)  # noqa: E711
+
+        if current_user.is_superuser:
+            projects = (
+                await session.exec(
+                    select(Folder)
                 )
-            )
-        ).all()
+            ).all()
+        else:
+            projects = (
+                await session.exec(
+                    select(Folder).where(
+                        or_(Folder.user_id == current_user.id, Folder.user_id == None)  # noqa: E711
+                    )
+                )
+            ).all()
+        
         projects = [project for project in projects if project.name != STARTER_FOLDER_NAME]
         return sorted(projects, key=lambda x: x.name != DEFAULT_FOLDER_NAME)
     except Exception as e:
@@ -118,7 +127,7 @@ async def read_projects(
 async def read_project(
     *,
     session: DbSession,
-    project_id: UUID,
+    project_id: str,
     current_user: CurrentActiveUser,
     params: Annotated[Params | None, Depends(custom_params)],
     is_component: bool = False,
@@ -126,13 +135,24 @@ async def read_project(
     search: str = "",
 ):
     try:
-        project = (
-            await session.exec(
-                select(Folder)
-                .options(selectinload(Folder.flows))
-                .where(Folder.id == project_id, Folder.user_id == current_user.id)
-            )
-        ).first()
+        if is_valid_uuid(project_id):
+            project_id = UUID(project_id)
+            project = (
+                await session.exec(
+                    select(Folder)
+                    .options(selectinload(Folder.flows))
+                    .where(Folder.id == project_id)
+                )
+            ).first()
+        else:
+            project = (
+                await session.exec(
+                    select(Folder)
+                    .options(selectinload(Folder.flows))
+                    .where(Folder.name == project_id)
+                )
+            ).first()
+            project_id = project.id
     except Exception as e:
         if "No result found" in str(e):
             raise HTTPException(status_code=404, detail="Project not found") from e
@@ -166,8 +186,8 @@ async def read_project(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
-    flows_from_current_user_in_project = [flow for flow in project.flows if flow.user_id == current_user.id]
-    project.flows = flows_from_current_user_in_project
+    if not current_user.is_superuser:
+        project.flows = [flow for flow in project.flows if flow.user_id == current_user.id]
     return project
 
 
